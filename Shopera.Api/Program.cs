@@ -1,36 +1,17 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Shopera.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --------------------
-// Add services
-// --------------------
+// خواندن کانکشن‌استرینگ از appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddInfrastructure(connectionString);
 
 builder.Services.AddControllers();
 
-
-// builder.Services.AddSwaggerGen();
-
-// --------------------
-// Build
-// --------------------
-
 var app = builder.Build();
 
-// --------------------
-// Middlewares
-// --------------------
-
-if (app.Environment.IsDevelopment())
-{
-}
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
