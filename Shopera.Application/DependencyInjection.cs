@@ -9,6 +9,7 @@ namespace Shopera.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<IRegisterService, RegisterService>();
+            services.AddScoped<ILoginService, LoginService>();
 
             return services;
         }
