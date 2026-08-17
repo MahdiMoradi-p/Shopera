@@ -33,7 +33,6 @@ namespace Shopera.Application.Service.User
                 Email = model.Email,
                 CreateDate = DateTime.Now
             };
-
             var result = await _userManager.CreateAsync(user, model.Password);
 
             return result;
