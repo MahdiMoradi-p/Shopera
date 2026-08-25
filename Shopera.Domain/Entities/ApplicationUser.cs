@@ -9,5 +9,7 @@ namespace Shopera.Domain.Entities
         public string LastName { get; set; }
 
         public DateTime CreateDate { get; set; } = DateTime.Now;
+        public ICollection<Order> Orders { get; set; }
+    = new List<Order>();
     }
 }
