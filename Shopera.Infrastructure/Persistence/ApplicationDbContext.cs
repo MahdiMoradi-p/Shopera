@@ -20,6 +20,9 @@ namespace Shopera.Infrastructure.Persistence
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+
+        public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,6 +50,21 @@ namespace Shopera.Infrastructure.Persistence
                 .WithMany(x => x.OrderDetails)
                 .HasForeignKey(x => x.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Invoice>()
+                  .HasOne(x => x.Order)
+                  .WithMany()
+                  .HasForeignKey(x => x.OrderId);
+
+            modelBuilder.Entity<InvoiceDetail>()
+                .HasOne(x => x.Invoice)
+                .WithMany(x => x.InvoiceDetails)
+                .HasForeignKey(x => x.InvoiceId);
+
+            modelBuilder.Entity<InvoiceDetail>()
+                .HasOne(x => x.Product)
+                .WithMany()
+                .HasForeignKey(x => x.ProductId);
         }
     }
 
