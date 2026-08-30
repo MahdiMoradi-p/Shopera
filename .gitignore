@@ -364,3 +364,6 @@ FodyWeavers.xsd
 
 # Local application settings
 Shopera.Api/appsettings.json
+
+**/appsettings.json
+**/appsettings.*.json
