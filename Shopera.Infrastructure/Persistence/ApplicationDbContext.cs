@@ -24,6 +24,8 @@ namespace Shopera.Infrastructure.Persistence
 
         public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
 
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -65,6 +67,18 @@ namespace Shopera.Infrastructure.Persistence
                 .HasOne(x => x.Product)
                 .WithMany()
                 .HasForeignKey(x => x.ProductId);
+            modelBuilder.Entity<CartItem>()
+        .HasOne(x => x.Cart)
+        .WithMany(x => x.CartItems)
+        .HasForeignKey(x => x.CartId)
+        .OnDelete(DeleteBehavior.Cascade);
+
+            // Product - CartItem
+            modelBuilder.Entity<CartItem>()
+                .HasOne(x => x.Product)
+                .WithMany()
+                .HasForeignKey(x => x.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 

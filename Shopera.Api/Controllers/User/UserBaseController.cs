@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Shopera.Api.Controllers.User
 {
-    [Route("api/[controller]")]
+  
     [ApiController]
     public class UserBaseController : ControllerBase
     {

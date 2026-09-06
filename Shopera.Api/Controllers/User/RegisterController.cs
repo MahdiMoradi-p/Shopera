@@ -5,12 +5,11 @@ using Shopera.Application.IService.User;
 namespace Shopera.Api.Controllers.User
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class AccountController : UserBaseController
+    public class RegisterController : UserBaseController
     {
         private readonly IRegisterService _registerService;
 
-        public AccountController(IRegisterService registerService)
+        public RegisterController(IRegisterService registerService)
         {
             _registerService = registerService;
         }

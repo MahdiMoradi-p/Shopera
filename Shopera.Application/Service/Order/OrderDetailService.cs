@@ -137,7 +137,7 @@ namespace Shopera.Application.Service.Order
         {
             var detail =
                 await _detailRepository.GetByIdAsync(id);
-
+            
             if (detail == null)
                 return false;
 

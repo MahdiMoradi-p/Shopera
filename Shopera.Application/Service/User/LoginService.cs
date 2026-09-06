@@ -8,15 +8,22 @@ namespace Shopera.Application.Service.User
     public class LoginService : ILoginService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IJwtService _jwtService;
 
-        public LoginService(UserManager<ApplicationUser> userManager)
+        public LoginService(
+            UserManager<ApplicationUser> userManager,
+            IJwtService jwtService)
         {
             _userManager = userManager;
+            _jwtService = jwtService;
         }
 
-        public async Task<ApplicationUser?> LoginAsync(LoginDto model)
+        public async Task<LoginResponseDto?> LoginAsync(
+            LoginDto model)
         {
-            var user = await _userManager.FindByNameAsync(model.UserName);
+            var user =
+                await _userManager.FindByNameAsync(
+                    model.UserName);
 
             if (user == null)
                 return null;
@@ -25,7 +32,20 @@ namespace Shopera.Application.Service.User
                 await _userManager.CheckPasswordAsync(
                     user,
                     model.Password);
-            return isPasswordValid ? user : null;
+
+            if (!isPasswordValid)
+                return null;
+
+            var token =
+                await _jwtService.GenerateTokenAsync(user);
+
+            return new LoginResponseDto
+            {
+                Token = token,
+                Expiration = DateTime.UtcNow.AddMinutes(60)
+            };
         }
+
+       
     }
 }
