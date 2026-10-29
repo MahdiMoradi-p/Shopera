@@ -5,7 +5,6 @@ using Shopera.Application.IService.User;
 namespace Shopera.Api.Controllers.User
 {
     [ApiController]
-    [Route("api/[controller]")]
     public class LoginController : UserBaseController
     {
         private readonly ILoginService _loginService;
@@ -16,20 +15,14 @@ namespace Shopera.Api.Controllers.User
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto model)
+        public async Task<IActionResult> Login(LoginDto dto)
         {
-            var user = await _loginService.LoginAsync(model);
+            var result = await _loginService.LoginAsync(dto);
 
-            if (user == null)
-            {
-                return BadRequest("Username or password is incorrect.");
-            }
+            if (result == null)
+                return Unauthorized("Username or password is incorrect.");
 
-            return Ok(new
-            {
-                Message = "Login successful",
-                UserName = user.UserName
-            });
+            return Ok(result);
         }
     }
 }
