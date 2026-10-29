@@ -23,9 +23,8 @@ namespace Shopera.Infrastructure.Persistence
         public DbSet<Invoice> Invoices { get; set; }
 
         public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
-
-        public DbSet<Cart> Carts { get; set; }
-        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -67,18 +66,18 @@ namespace Shopera.Infrastructure.Persistence
                 .HasOne(x => x.Product)
                 .WithMany()
                 .HasForeignKey(x => x.ProductId);
-            modelBuilder.Entity<CartItem>()
-        .HasOne(x => x.Cart)
-        .WithMany(x => x.CartItems)
-        .HasForeignKey(x => x.CartId)
-        .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Product>()
 
-            // Product - CartItem
-            modelBuilder.Entity<CartItem>()
-                .HasOne(x => x.Product)
-                .WithMany()
-                .HasForeignKey(x => x.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+    .HasOne(p => p.Category)
+    .WithMany(c => c.Products)
+    .HasForeignKey(p => p.CategoryId)
+    .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ProductImage>()
+    .HasOne(x => x.Product)
+    .WithMany(x => x.Images)
+    .HasForeignKey(x => x.ProductId)
+    .OnDelete(DeleteBehavior.Cascade);
         }
     }
 

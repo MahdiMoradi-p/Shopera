@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Shopera.Application.DTOs.Product;
 using Shopera.Application.IService.Product;
 
@@ -16,36 +15,43 @@ namespace Shopera.API.Controllers
             _productService = productService;
         }
 
-        // فقط Admin
-        [Authorize(Roles = "Admin")]
+        // ایجاد محصول
         [HttpPost]
         public async Task<IActionResult> Create(
             CreateProductDto dto)
         {
-            var product =
-                await _productService.CreateAsync(dto);
+            var product = await _productService.CreateAsync(dto);
 
             return Ok(product);
         }
 
-        // Admin و User
-        [AllowAnonymous]
+        // دریافت همه محصولات
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var products =
-                await _productService.GetAllAsync();
+            var products = await _productService.GetAllAsync();
 
             return Ok(products);
         }
 
-        // Admin و User
-        [AllowAnonymous]
-        [HttpGet("{id}")]
+        // جست‌وجوی محصولات
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(
+            [FromQuery] string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest("عبارت جست‌وجو الزامی است.");
+
+            var products = await _productService.SearchAsync(query);
+
+            return Ok(products);
+        }
+
+        // دریافت محصول با شناسه
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var product =
-                await _productService.GetByIdAsync(id);
+            var product = await _productService.GetByIdAsync(id);
 
             if (product == null)
                 return NotFound();
@@ -53,28 +59,24 @@ namespace Shopera.API.Controllers
             return Ok(product);
         }
 
-        // فقط Admin
-        [Authorize(Roles = "Admin")]
+        // ویرایش محصول
         [HttpPut]
         public async Task<IActionResult> Update(
             UpdateProductDto dto)
         {
-            var result =
-                await _productService.UpdateAsync(dto);
+            var result = await _productService.UpdateAsync(dto);
 
             if (!result)
                 return NotFound();
 
-            return NoContent();
+            return Ok();
         }
 
-        // فقط Admin
-        [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}")]
+        // حذف محصول
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result =
-                await _productService.DeleteAsync(id);
+            var result = await _productService.DeleteAsync(id);
 
             if (!result)
                 return NotFound();

@@ -28,6 +28,18 @@ namespace Shopera.Application.Service.User
                     });
             }
 
+            var existingUser =
+                await _userManager.FindByNameAsync(model.UserName);
+
+            if (existingUser != null)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError
+                    {
+                        Description = "Username already exists."
+                    });
+            }
+
             var user = new ApplicationUser
             {
                 FirstName = model.FirstName,
@@ -37,7 +49,6 @@ namespace Shopera.Application.Service.User
                 CreateDate = DateTime.Now
             };
 
-            // ساخت User
             var result = await _userManager.CreateAsync(
                 user,
                 model.Password);
@@ -45,13 +56,18 @@ namespace Shopera.Application.Service.User
             if (!result.Succeeded)
                 return result;
 
-            // دادن Role = User
+            // Assign the default User role
             var roleResult = await _userManager.AddToRoleAsync(
                 user,
                 "User");
 
             if (!roleResult.Succeeded)
+            {
+                // Do not leave an account without its required role
+                await _userManager.DeleteAsync(user);
+
                 return roleResult;
+            }
 
             return IdentityResult.Success;
         }

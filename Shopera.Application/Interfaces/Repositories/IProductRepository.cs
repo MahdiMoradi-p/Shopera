@@ -9,6 +9,7 @@ namespace Shopera.Application.Interfaces.Repositories
         Task<List<Product>> GetAllAsync();
 
         Task<Product?> GetByIdAsync(int id);
+        Task<List<Product>> SearchAsync(string query);
 
         Task UpdateAsync(Product product);
 
