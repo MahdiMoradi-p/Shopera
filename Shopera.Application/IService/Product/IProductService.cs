@@ -10,7 +10,7 @@ namespace Shopera.Application.IService.Product
 
         Task<ProductDto?> GetByIdAsync(int id);
 
-        Task<bool> UpdateAsync(UpdateProductDto dto);
+        Task<ProductSearchResponseDto> SearchAsync(string query); Task<bool> UpdateAsync(UpdateProductDto dto);
 
         Task<bool> DeleteAsync(int id);
     }

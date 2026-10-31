@@ -9,19 +9,34 @@ namespace Shopera.Application.Service.User
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public RegisterService(UserManager<ApplicationUser> userManager)
+        public RegisterService(
+            UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
 
-        public async Task<IdentityResult> RegisterAsync(RegisterDto model)
+        public async Task<IdentityResult> RegisterAsync(
+            RegisterDto model)
         {
             if (model.Password != model.ConfirmPassword)
             {
                 return IdentityResult.Failed(
                     new IdentityError
                     {
-                        Description = "Password and ConfirmPassword do not match."
+                        Description =
+                            "Password and ConfirmPassword do not match."
+                    });
+            }
+
+            var existingUser =
+                await _userManager.FindByNameAsync(model.UserName);
+
+            if (existingUser != null)
+            {
+                return IdentityResult.Failed(
+                    new IdentityError
+                    {
+                        Description = "Username already exists."
                     });
             }
 
@@ -33,9 +48,28 @@ namespace Shopera.Application.Service.User
                 Email = model.Email,
                 CreateDate = DateTime.Now
             };
-            var result = await _userManager.CreateAsync(user, model.Password);
 
-            return result;
+            var result = await _userManager.CreateAsync(
+                user,
+                model.Password);
+
+            if (!result.Succeeded)
+                return result;
+
+            // Assign the default User role
+            var roleResult = await _userManager.AddToRoleAsync(
+                user,
+                "User");
+
+            if (!roleResult.Succeeded)
+            {
+                // Do not leave an account without its required role
+                await _userManager.DeleteAsync(user);
+
+                return roleResult;
+            }
+
+            return IdentityResult.Success;
         }
     }
 }

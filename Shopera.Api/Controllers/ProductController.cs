@@ -15,6 +15,7 @@ namespace Shopera.API.Controllers
             _productService = productService;
         }
 
+        // ایجاد محصول
         [HttpPost]
         public async Task<IActionResult> Create(
             CreateProductDto dto)
@@ -24,6 +25,7 @@ namespace Shopera.API.Controllers
             return Ok(product);
         }
 
+        // دریافت همه محصولات
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -32,7 +34,21 @@ namespace Shopera.API.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id}")]
+        // جست‌وجوی محصولات
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(
+            [FromQuery] string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest("عبارت جست‌وجو الزامی است.");
+
+            var products = await _productService.SearchAsync(query);
+
+            return Ok(products);
+        }
+
+        // دریافت محصول با شناسه
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -43,6 +59,7 @@ namespace Shopera.API.Controllers
             return Ok(product);
         }
 
+        // ویرایش محصول
         [HttpPut]
         public async Task<IActionResult> Update(
             UpdateProductDto dto)
@@ -55,7 +72,8 @@ namespace Shopera.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("{id}")]
+        // حذف محصول
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _productService.DeleteAsync(id);

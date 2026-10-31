@@ -12,6 +12,12 @@
 
         public int Stock { get; set; }
 
+        public int? CategoryId { get; set; }
+
+        public string? CategoryName { get; set; }
+
         public DateTime CreateDate { get; set; }
+        public List<ProductImageDto> Images { get; set; }
+                    = new List<ProductImageDto>();
     }
 }

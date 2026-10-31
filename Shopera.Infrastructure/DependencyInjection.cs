@@ -40,6 +40,8 @@ namespace Shopera.Infrastructure
             services.AddScoped<IProductDetailRepository, ProductDetailRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductImageRepository, ProductImageRepository>();
 
             return services;
         }
