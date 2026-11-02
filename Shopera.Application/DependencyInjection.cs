@@ -1,14 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using Shopera.Application.IService.Category;
 using Shopera.Application.IService.Order;
 using Shopera.Application.IService.Product;
-using Shopera.Application.IService.ProductImage;
 using Shopera.Application.IService.User;
-using Shopera.Application.Service.Category;
 using Shopera.Application.Service.Order;
 using Shopera.Application.Service.Product;
-using Shopera.Application.Service.ProductImage;
 using Shopera.Application.Service.User;
 using Shopera.Application.Validators.User;
 
@@ -27,8 +23,6 @@ namespace Shopera.Application
             services.AddScoped<IProductDetailService, ProductDetailService>();
             services.AddScoped<IOrderService , OrderService>();
             services.AddScoped<IOrderDetailService , OrderDetailService>();
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IProductImageService, ProductImageService>();
             return services;
         }
     }
